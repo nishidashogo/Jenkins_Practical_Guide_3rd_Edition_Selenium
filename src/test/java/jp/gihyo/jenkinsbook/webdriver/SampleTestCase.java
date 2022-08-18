@@ -16,7 +16,13 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.*;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.devicefarm.*;
+import software.amazon.awssdk.services.devicefarm.model.*;
+import java.net.URL;
 
 public class SampleTestCase {
 
@@ -26,11 +32,19 @@ public class SampleTestCase {
 	@BeforeClass
 	public static void setUpClass() throws IOException {
 		prop.load(new FileInputStream("target/test-classes/selenium.properties"));
-		System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("headless");
-		options.addArguments("--no-sandbox");
-		driver = new ChromeDriver(options);
+		String myProjectARN = "arn:aws:devicefarm:us-west-2:421850136157:testgrid-project:0298e20b-5d0f-43b2-9517-cad66a36f6a5";
+		DeviceFarmClient client  = DeviceFarmClient.builder().region(Region.US_WEST_2).build();
+		CreateTestGridUrlRequest request = CreateTestGridUrlRequest.builder()
+		.expiresInSeconds(300)
+		.projectArn(myProjectARN)
+		.build();
+		CreateTestGridUrlResponse response = client.createTestGridUrl(request);
+		DesiredCapabilities cap = DesiredCapabilities.edge();
+		cap.setCapability("ms:edgeChromium", "true");
+		URL testGridUrl = new URL(response.url());
+		// You can now pass this URL into RemoteWebDriver.
+		driver = new RemoteWebDriver(testGridUrl, cap);
+
 	}
 	
 	@AfterClass
