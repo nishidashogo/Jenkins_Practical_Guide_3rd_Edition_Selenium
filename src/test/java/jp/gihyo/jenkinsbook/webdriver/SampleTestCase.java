@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.*;
 
 public class SampleTestCase {
 
@@ -24,8 +25,12 @@ public class SampleTestCase {
 	
 	@BeforeClass
 	public static void setUpClass() throws IOException {
-		prop.load(new FileInputStream("target\\test-classes\\selenium.properties"));
-		driver = new FirefoxDriver();
+		prop.load(new FileInputStream("target/test-classes/selenium.properties"));
+		System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("headless");
+		options.addArguments("--no-sandbox");
+		driver = new ChromeDriver(options);
 	}
 	
 	@AfterClass
