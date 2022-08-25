@@ -21,8 +21,8 @@
     <junit.version>4.12</junit.version>
     
     <!-- Selenium Properties -->
-    <selenium-java.version>3.4.0</selenium-java.version>
-    <selenium.baseUrl>http://13.231.251.130:8080</selenium.baseUrl>
+    <selenium-java.version>3.14.0</selenium-java.version>
+    <selenium.baseUrl>${targetURL}</selenium.baseUrl>
   </properties>
   
   <dependencyManagement>
